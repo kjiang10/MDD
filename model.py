@@ -20,7 +20,7 @@ class GradientReverseLayer(Function):
         return grad_output.neg()*ctx.alpha, None, None
 
 class MDDNet(nn.Module):
-    def __init__(self, base_net='ResNet50', use_bottleneck=True, bottleneck_dim=1024, width=1024, class_num=31):
+    def __init__(self, base_net='ResNet50', use_bottleneck=True, bottleneck_dim=1024, width=1024, class_num=10):
         super(MDDNet, self).__init__()
         ## set base network
         self.base_network = backbone.network_dict[base_net]()

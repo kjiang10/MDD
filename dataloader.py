@@ -113,7 +113,7 @@ class CatDataloader():
     def __len__(self):
         return len(self.dataloaders[0])
 
-def get_loader(s='mnist', t='mnist_m', batch_size=1000, train=True):
+def get_loader(s='mnist', t='mnist_m', batch_size=100, train=True):
     source_dir = f'domain_adaptation_images/{s}/images/'
     target_dir = f'domain_adaptation_images/{t}/images/'
     transformA = transforms.Compose([transforms.RandomHorizontalFlip(),
@@ -122,15 +122,17 @@ def get_loader(s='mnist', t='mnist_m', batch_size=1000, train=True):
                                     transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                                     ])
     transformB = transforms.Compose([transforms.Resize(size=(28, 28)),
+                                    # transforms.CenterCrop(28),
                                     transforms.ToTensor(),
-                                    transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
+                                    # transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
+                                    #transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                                     ])
     if train:
-        source = ImageFolder(source_dir, domain=0, transform=transformA)
-        target = ImageFolder(target_dir, domain=1,  transform=transformA)
+        source = ImageFolder(source_dir, domain=0, transform=transformB)
+        target = ImageFolder(target_dir, domain=1,  transform=transformB)
         n_samples = max(len(target), len(source))
-        source = ImageFolder(source_dir, domain=0, n_sample=n_samples, transform=transformA)
-        target = ImageFolder(target_dir, domain=1, n_sample=n_samples, transform=transformA)
+        source = ImageFolder(source_dir, domain=0, n_sample=n_samples, transform=transformB)
+        target = ImageFolder(target_dir, domain=1, n_sample=n_samples, transform=transformB)
 
         sd = DataLoader(source, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4, pin_memory=True)
         td = DataLoader(target, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4, pin_memory=True)
