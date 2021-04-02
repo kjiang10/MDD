@@ -18,7 +18,7 @@ def main():
     model = MDD(base_net='ResNet50', width=1024, use_gpu=True, class_num=10, srcweight=1.5)
 
     # init optimizer
-    opt = optim.SGD(model.get_parameter_list(), lr=5e-3, weight_decay=5e-5, momentum=0.9, nesterov=True)
+    opt = optim.SGD(model.get_parameter_list(), lr=8e-3, weight_decay=5e-5, momentum=0.9, nesterov=True)
 
     def train(e):
         # model.train()
@@ -33,7 +33,7 @@ def main():
                 domain = torch.cat([sdomain, tdomain], dim=0)
                 img, label, domain = img.to(device), label.to(device), domain.to(device)
                 
-                alpha = torch.tensor(2.0 * 0.1 / (1. + torch.exp(torch.tensor(-(i+e*50)/1000.))) - 0.1)
+                alpha = torch.tensor(2.0 * 0.1 / (1. + torch.exp(torch.tensor(-(i+e*10)/1000.))) - 0.1)
 
 
                 cls_loss, trans_loss = model.get_loss(img, label, domain, alpha=alpha)
